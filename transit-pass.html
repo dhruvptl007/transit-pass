@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Whitehorse Transit Pass</title>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f4f4f4;
+}
+
+/* TOP HEADER WITH TEXT AND CANCEL */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 12px 16px;
+}
+
+.header-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.header-left .title {
+  font-size: 18px;
+  font-weight: bold;
+  color: black;
+}
+
+.header-left .subtitle {
+  font-size: 13px;
+  color: #555;
+  margin-top: 2px;
+}
+
+.header .cancel {
+  font-size: 28px; /* slightly bigger */
+  font-weight: normal;
+  cursor: pointer;
+  color: black; /* black cross */
+  line-height: 1;
+}
+
+/* CIRCLE CONTAINER */
+.circle {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  margin: 40px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: visible;
+}
+
+/* PULSE RING */
+.circle::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  box-shadow: 0 0 0 12px rgba(47, 143, 179, 0.7); /* thicker ring */
+  animation: ringPulse 3s infinite;
+}
+
+/* LOGO */
+.logo img {
+  width: 100px;
+  z-index: 1;
+  position: relative;
+}
+
+/* TIME */
+.time {
+  font-size: 42px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* PASS CARD */
+.card {
+  background: white;
+  width: 85%;
+  max-width: 360px;
+  margin: 30px auto;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+  text-align: left;
+}
+
+.pass {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.location {
+  color: #777;
+  margin-top: 4px;
+}
+
+.expire {
+  margin-top: 14px;
+  font-size: 14px;
+}
+
+/* PULSE ANIMATION */
+@keyframes ringPulse {
+  0%   { box-shadow: 0 0 0 12px rgba(0, 107, 136); }
+  25%  { box-shadow: 0 0 0 35px rgba(0, 107, 136); }
+  50%  { box-shadow: 0 0 0 16px rgba(0, 107, 136); }
+  75%  { box-shadow: 0 0 0 20px rgba(0, 107, 136); }
+  100% { box-shadow: 0 0 0 12px rgba(0, 107, 136); }
+}
+
+</style>
+</head>
+<body>
+
+<!-- HEADER WITH TEXT AND CANCEL -->
+<div class="header">
+  <div class="header-left">
+    <div class="title">Whitehorse Transit</div>
+    <div class="subtitle">Show operator your ticket</div>
+  </div>
+  <div class="cancel" onclick="closePage()">×</div>
+</div>
+
+<!-- CIRCLE WITH LOGO AND PULSE -->
+<div class="circle">
+  <div class="logo">
+    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/d/de/City_of_Whitehorse_Logo.svg/200px-City_of_Whitehorse_Logo.svg.png" alt="Transit Logo">
+  </div>
+</div>
+
+<!-- LIVE TIME -->
+<div class="time" id="clock"></div>
+
+<!-- PASS CARD -->
+<div class="card">
+  <div class="pass">Adult 1-Month Pass</div>
+  <div class="location">Whitehorse, YT</div>
+  <div class="expire" id="expire"></div>
+</div>
+
+<script>
+// LIVE CLOCK FUNCTION
+function updateClock() {
+  const now = new Date();
+  const timeOptions = {
+    timeZone: "America/Whitehorse",
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true
+  };
+  let timeString = now.toLocaleTimeString("en-CA", timeOptions);
+  timeString = timeString.replace("AM","a.m.").replace("PM","p.m.");
+  document.getElementById("clock").innerText = timeString;
+}
+
+// CALCULATE EXPIRY 30 DAYS FROM TODAY
+function updateExpiry() {
+  const now = new Date();
+  const expiryDate = new Date(now.getTime() + 30*24*60*60*1000); // add 30 days
+  const options = { day:"numeric", month:"short", year:"numeric" };
+  const dateString = expiryDate.toLocaleDateString("en-CA", options);
+  document.getElementById("expire").innerText = `Expires ${dateString}, 12:00 a.m.`;
+}
+
+setInterval(updateClock,1000);
+updateClock();
+updateExpiry();
+
+// CANCEL BUTTON FUNCTION
+function closePage() {
+  window.close(); // closes tab/window if allowed
+}
+</script>
+
+</body>
+</html>
